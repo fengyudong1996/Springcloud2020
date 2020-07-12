@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- namespace 强调的是我们映射哪个dao接口，按着ctrl点的进去才算成功-->
+<mapper namespace="com.springcloud.dao.PaymentDao">
+    <!-- id 是方法名 参数类型传的是 Payment实体 ，useGeneratedKeys = true 当我们插入成功返回一个数字 大于0成功，等于0失败 keyProperty主键就是id  -->
+    <insert id="create" parameterType="Payment" useGeneratedKeys="true" keyProperty="id">
+        insert into payment(serial)  values(#{serial});
+    </insert>
+
+    <!-- 这里我们进行映射 ，id 和 Type 直接复制不要写错
+     数据库中的列 我们用column ， java中定义的属性用 property ，jdbcType就是字段的类型
+     -->
+    <resultMap id="BaseResultMap" type="com.springcloud.entities.Payment">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <id column="serial" property="serial" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!-- parameterType=Long 我们按照ID查询 resultMap可以是resultType 直接写实体类，实际工作过程中强烈建议大家用结果集映射，为了防止工程较大
+      命名不规范等等问题，这里我们还是用resultMap做一个映射
+      -->
+    <select id="getPaymentById" parameterType="Long" resultMap="BaseResultMap">
+        select * from payment where id=#{id};
+    </select>
+
+</mapper>
